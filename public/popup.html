@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spend Your Life</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-2: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #f59e0b;
+      --accent-soft: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --success: #22c55e;
+      --border: #334155;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      width: 340px;
+      margin: 0;
+      padding: 18px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .subtitle {
+      margin: 0 0 14px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .row:last-child { margin-bottom: 0; }
+    .field { flex: 1; }
+    .field label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .field input,
+    .field select {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+    .field input:focus,
+    .field select:focus { border-color: var(--accent); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-weight: 500; font-size: 12px; }
+    .toggle-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--surface-2);
+      border-radius: 22px;
+      transition: 0.2s;
+    }
+    .slider::before {
+      position: absolute;
+      content: "";
+      height: 16px; width: 16px;
+      left: 3px; bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    .switch input:checked + .slider { background: var(--accent); }
+    .switch input:checked + .slider::before { transform: translateX(18px); }
+    button.primary {
+      width: 100%;
+      border: none;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #0f172a;
+      background: var(--accent);
+      transition: filter 0.15s ease, transform 0.1s ease;
+      margin-top: 6px;
+    }
+    button.primary:hover { filter: brightness(1.08); }
+    button.primary:active { transform: scale(0.98); }
+    button.primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    #status {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      min-height: 2.4em;
+    }
+    #status.error { color: var(--danger); }
+    #status.ok { color: var(--success); }
+    .llm-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+    .llm-section summary {
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .llm-section summary::after {
+      content: "▸";
+      font-size: 14px;
+    }
+    .llm-section[open] summary::after { content: "▾"; }
+    .small { font-size: 10px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <h1><span>⏱️</span> Spend Your Life</h1>
+  <p class="subtitle">Fiyatlari calisma saatine cevirir. Pazarlama tuzaklarini gizler.</p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field">
+        <label>Aylik Maas</label>
+        <input type="number" id="salaryInput" min="0" step="100" placeholder="Orn: 35000" />
+      </div>
+      <div class="field">
+        <label>Para Birimi</label>
+        <select id="currencySelect">
+          <option value="TRY" selected>TRY (₺)</option>
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Haftalik Saat</label>
+        <input type="number" id="hoursInput" min="1" max="168" step="1" value="45" />
+      </div>
+      <div class="field">
+        <label style="visibility:hidden">.</label>
+        <div class="badge" id="hourlyBadge">Saatlik: —</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">Saat cevirici</div>
+        <div class="toggle-sub">Fiyatlari calisma saatine cevir</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggleConverter" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">FOMO gizleyici</div>
+        <div class="toggle-sub">"Son 3 adet" gibi mesajlari gizle</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggleFomo" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">Gelismis gorsel analiz</div>
+        <div class="toggle-sub">LLM + ekran goruntusu (daha yavas)</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggleVision" />
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <details class="card llm-section">
+    <summary>LLM Ayarlari</summary>
+    <div class="row" style="margin-top:8px">
+      <div class="field">
+        <label>Provider</label>
+        <select id="providerSelect">
+          <option value="none" selected>Kapali (Manuel mod)</option>
+          <option value="openrouter">OpenRouter API</option>
+          <option value="backend">Aura Backend</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>API Key / URL</label>
+        <input type="password" id="apiKeyInput" placeholder="sk-or-v1-... veya http://127.0.0.1:8000" />
+      </div>
+    </div>
+    <p class="small">API anahtariniz yerel olarak saklanir. Hicbir sunucuya gonderilmez.</p>
+  </details>
+
+  <button class="primary" id="saveBtn">Ayarlari Kaydet</button>
+  <p id="status" aria-live="polite"></p>
+
+  <script src="../src/popup.js"></script>
+</body>
+</html>

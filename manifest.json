@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Spend Your Life",
+  "version": "1.0.0",
+  "description": "Alisveris sitelerindeki fiyatlari calisma saatine cevirir ve pazarlama taktiklerini gizler.",
+  "permissions": ["activeTab", "scripting", "storage", "tabs", "alarms"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "public/popup.html",
+    "default_icon": {
+      "16": "public/icon.png",
+      "48": "public/icon.png",
+      "128": "public/icon.png"
+    }
+  },
+  "icons": {
+    "16": "public/icon.png",
+    "48": "public/icon.png",
+    "128": "public/icon.png"
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "src/content_scripts/pruner.js",
+        "src/content_scripts/transformer.js"
+      ],
+      "css": ["src/content_scripts/styles.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
